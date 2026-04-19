@@ -2,7 +2,7 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-
+console.log("ENV CHECK:", process.env.MONGO_URL);
 
 const express = require("express");
 const app = express();
@@ -26,7 +26,6 @@ const User = require("./models/user.js");
 
 // ✅ DB URL
 const dbUrl = process.env.MONGO_URL;
-
 if (!dbUrl) {
   throw new Error("MONGO_URL is missing in environment variables");
 }
@@ -46,7 +45,7 @@ store.on("error", (err) => {
 });
 
 
-// ✅ Trust proxy (IMPORTANT for Render)
+// ✅ IMPORTANT (Render fix)
 app.set("trust proxy", 1);
 
 
@@ -60,7 +59,7 @@ const sessionOptions = {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // ✅ production fix
+    secure: process.env.NODE_ENV === "production",
   },
 };
 
@@ -68,7 +67,7 @@ app.use(session(sessionOptions));
 app.use(flash());
 
 
-// ✅ Passport Config
+// ✅ Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -98,10 +97,16 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
 
-// ✅ DB Connection (ONLY ONCE)
+// ✅ DB Connection
 mongoose.connect(dbUrl)
   .then(() => console.log("✅ Connected to DB"))
   .catch((err) => console.log(err));
+
+
+// ✅ ROOT ROUTE
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
 
 // ✅ Routes
