@@ -1,19 +1,17 @@
 const express = require("express");
-const router = express.Router({ mergeParams: true });
-const User = require("../models/user");
+const router = express.Router();
+
 const WrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware");
 const userController = require("../controllers/users");
 
-
-// signup form and signup route
+// Signup
 router.route("/signup")
 .get(userController.renderSignUp)
 .post(WrapAsync(userController.signup));
 
-
-// login form and login route
+// Login
 router.route("/login")
 .get(userController.renderLoginForm)
 .post(
@@ -25,7 +23,7 @@ router.route("/login")
     userController.login
 );
 
-
+// Logout
 router.get("/logout", userController.logout);
 
 module.exports = router;
