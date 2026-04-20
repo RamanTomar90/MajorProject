@@ -71,7 +71,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-mongoose.connect(dbUrl);
+// FIX 1: proper mongoose connection handling
+mongoose.connect(dbUrl)
+  .then(() => {
+    console.log("DB connected");
+  })
+  .catch((err) => {
+    console.log("DB connection error:", err);
+  });
 
 app.get("/", (req, res) => {
   res.redirect("/listings");
@@ -81,12 +88,15 @@ app.use("/listings/:id/reviews", reviewRouter);
 app.use("/listings", listingRouter);
 app.use("/", userRouter);
 
+// error handler
 app.use((err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   return res.status(statusCode).render("error", { err });
 });
 
-app.listen(8080,()=>{
-  
-  console.log("server is listening on port 8080");
+
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log("server is listening on port", PORT);
 });
