@@ -5,7 +5,19 @@ const mapToken = process.env.MAP_TOKEN;
 const geoCodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
-  const allListings = await Listing.find({});
+  // FIXED: handle search query from navbar search bar
+  let query = {};
+  if (req.query.q && req.query.q.trim() !== "") {
+    const q = req.query.q.trim();
+    query = {
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { location: { $regex: q, $options: "i" } },
+        { country: { $regex: q, $options: "i" } },
+      ],
+    };
+  }
+  const allListings = await Listing.find(query);
   res.render("listings/index", { allListings });
 };
 
@@ -28,7 +40,12 @@ module.exports.showListing = async (req, res) => {
     return res.redirect("/listings");
   }
 
-  res.render("listings/show", { listing });
+  // FIXED: ensure geometry exists so map.js doesn't crash
+  if (!listing.geometry) {
+    listing.geometry = { type: "Point", coordinates: [0, 0] };
+  }
+
+  res.render("listings/show", { listing, mapToken: process.env.MAP_TOKEN });
 };
 
 module.exports.createListing = async (req, res) => {
@@ -42,12 +59,13 @@ module.exports.createListing = async (req, res) => {
     return res.redirect("/listings/new");
   }
 
-  let url = req.file.path;
-  let filename = req.file.filename;
-
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
-  newListing.image = { url, filename };
+
+  // FIXED: only set image if a file was actually uploaded
+  if (req.file) {
+    newListing.image = { url: req.file.path, filename: req.file.filename };
+  }
 
   
   newListing.geometry = response.body.features[0].geometry;
@@ -67,8 +85,11 @@ module.exports.renderEditForm = async (req, res) => {
     return res.redirect("/listings");
   }
 
-  let originalImageUrl = listing.image.url;
-  originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+  // FIXED: guard against missing image
+  let originalImageUrl = (listing.image && listing.image.url) ? listing.image.url : "";
+  if (originalImageUrl) {
+    originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+  }
 
   res.render("listings/edit", { listing, originalImageUrl });
 };

@@ -18,8 +18,11 @@
 
         <div class="mb-3">
             <p>Original Listing Image</p>
-            <img src ="<%= originalImageUrl %>"
-
+            <% if(originalImageUrl) { %>
+              <img src="<%= originalImageUrl %>" alt="listing image" class="img-thumbnail" style="width:250px;">
+            <% } else { %>
+              <p class="text-muted">No image uploaded</p>
+            <% } %>
         </div>
         
         <div class="mb-3">
@@ -47,7 +50,7 @@
         <input name="listing[location]" value="<%= listing.location%>" type="text" class="form-control" required>
         <div class="invalid-feedback">Location should be valid</div>
     </div>
-        
+        </div>  <!-- FIXED: closing </div> for the .row -->
         
         <button class="btn btn-dark edit-btn mt-3">Edit</button>
     

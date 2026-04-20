@@ -14,8 +14,8 @@ router.route("/")
 .get(wrapAsync(listingController.index))
 .post(
   isLoggedIn,
+  upload.single("listing[image]"),  // FIXED: multer must run BEFORE validateListing
   validateListing,
-  upload.single("listing[image]"),
   wrapAsync(listingController.createListing)
 );
 
@@ -28,8 +28,8 @@ router.route("/:id")
 .put(
   isLoggedIn,
   isOwner,
+  upload.single("listing[image]"),  // FIXED: multer must run BEFORE validateListing
   validateListing,
-  upload.single("listing[image]"),
   wrapAsync(listingController.updateListing)
 )
 .delete(isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
