@@ -9,6 +9,12 @@ module.exports.renderSignUp = (req, res) => {
 module.exports.signup = async (req, res, next) => {
     try {
         let { username, email, password } = req.body;
+        
+        if (!username || !email || !password || password.trim().length === 0) {
+            req.flash("error", "All fields are required!");
+            return res.redirect("/signup");
+        }
+
 
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
