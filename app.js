@@ -33,6 +33,16 @@ const store = MongoStore.create({
 
 app.set("trust proxy", 1);
 
+// FIX: default locals so views (navbar/flash) never throw
+// "currUser is not defined" if a later middleware errors before
+// the real currUser/flash middleware below runs.
+app.use((req, res, next) => {
+  res.locals.currUser = null;
+  res.locals.success = [];
+  res.locals.error = [];
+  next();
+});
+
 const sessionOptions = {
   store,
   secret: process.env.SECRET,
