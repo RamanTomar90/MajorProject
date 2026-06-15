@@ -26,16 +26,18 @@ const dbUrl = process.env.MONGO_URL;
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   crypto: {
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || "mysupersecret",
   },
   touchAfter: 24 * 3600,
 });
 
+store.on("error", (err) => {
+  console.log("Mongo Store Error:", err);
+});
+
 app.set("trust proxy", 1);
 
-// FIX: default locals so views (navbar/flash) never throw
-// "currUser is not defined" if a later middleware errors before
-// the real currUser/flash middleware below runs.
+
 app.use((req, res, next) => {
   res.locals.currUser = null;
   res.locals.success = [];
@@ -45,11 +47,11 @@ app.use((req, res, next) => {
 
 const sessionOptions = {
   store,
-  secret: process.env.SECRET,
+  secret: process.env.SECRET || "mysupersecret",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -81,7 +83,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// FIX 1: proper mongoose connection handling
+
 mongoose.connect(dbUrl)
   .then(() => {
     console.log("DB connected");
@@ -99,9 +101,23 @@ app.use("/listings", listingRouter);
 app.use("/", userRouter);
 
 // error handler
+// Error Handler
 app.use((err, req, res, next) => {
-  let statusCode = err.statusCode || 500;
-  return res.status(statusCode).render("error", { err });
+  console.error(err);
+
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Something went wrong!";
+
+  res.status(statusCode).render("error", {
+    err: {
+      statusCode,
+      message,
+    },
+  });
 });
 
 
