@@ -1,0 +1,223 @@
+body {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  display:flex;
+  flex-direction: column;
+  min-height:100vh;
+}
+
+.container{
+   flex:1; 
+}
+
+/* navbar */
+.navbar{
+    min-height:5rem;   /* ❌ height fix hatao → ✅ min-height use karo */
+    background-color: white;
+    flex-wrap: wrap;   /* mobile me break hone de */
+}
+
+.fa-compass{
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link{
+    color: #222222 !important;
+}
+
+/* Footer */
+.f-info-links a{
+   text-decoration: none;
+   color:#222222;
+}
+
+.f-info-links a:hover {
+    text-decoration: underline;
+}
+
+.f-info-links,.f-info-socials, .f-info-brand{
+  width:100%;  
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-info-socials i{
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.f-info{
+    text-align:center;
+    height: 8rem;
+    background-color: #ebebeb;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+/* cards */
+.listing-card{
+    border:none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top{
+    border-radius:1rem !important;
+    width:100% !important;
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding:0 !important;
+}
+
+.card-text p {
+    font-weight :400;
+}
+
+.listings-link{
+    text-decoration: none;
+}
+
+/* card effect */
+.card-img-overlay{
+    opacity:0;
+}
+
+.card-img-overlay:hover {
+    opacity:0.2;
+    background-color: white;
+}
+
+/* buttons */
+.add-btn,
+.edit-btn {
+    background-color: #fe424d !important;
+    border:none !important;
+}
+
+/* show page */
+.show-img{
+    height:30vh;
+}
+
+.btns{
+  display:flex;
+}
+
+.show-card{
+    padding-left:0;
+    padding-right:0;
+}
+
+/* map */
+#map{
+    height: 400px;
+    width:100%;
+}
+
+/* ===================== */
+/* FILTERS */
+/* ===================== */
+
+#filters {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+#filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter {
+    flex: 0 0 auto;
+    min-width: 80px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.filter:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.filter i {
+    font-size: 1.2rem;
+}
+
+.tax-toggle{
+    margin-left: auto;
+    border: 1px solid black;
+    border-radius: 1rem;
+    height:3.5rem;
+    padding: 1rem;
+}
+
+.tax-info{
+    display:none;
+}
+
+/* ===================== */
+/* SEARCH */
+/* ===================== */
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* input */
+.search-inp{
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    font-size:1rem;
+    border: 1px solid #ccc;
+}
+
+/* button */
+.search-btn{
+    background-color: #fe424d !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* ===================== */
+/* RESPONSIVE FIX */
+/* ===================== */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+
+    .search-form {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .search-inp {
+        flex: 1;
+        width: 100%;
+    }
+
+    .search-btn span {
+        display: none;   /* mobile me sirf icon */
+    }
+
+    #filters {
+        overflow-x: auto;
+    }
+}

@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <div class="container-fluid">
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">
+      <i class="fa fa-compass"></i>
+    </a>
+    
+    <!-- Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- ✅ SEARCH (always visible & clean) -->
+    <form action="/listings" method="GET" 
+          class="search-form d-flex align-items-center mx-md-auto my-2 my-md-0">
+      
+      <input 
+        type="text" 
+        name="q"
+        class="search-inp" 
+        placeholder="Search destinations"
+      >
+
+      <button class="search-btn" type="submit">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span class="d-none d-md-inline">Search</span>
+      </button>
+    </form>
+
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      
+      <!-- LEFT -->
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">Explore</a>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Airbnb your home</a>
+
+        <% if(!currUser) { %>
+          <a class="nav-link" href="/signup"><b>Sign up</b></a>
+          <a class="nav-link" href="/login"><b>Login</b></a>
+        <% } %>
+
+        <% if(currUser) { %>
+          <a class="nav-link" href="/logout"><b>Log out</b></a>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+</nav>
