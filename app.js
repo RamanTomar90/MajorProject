@@ -29,6 +29,7 @@ const store = MongoStore.create({
     secret: process.env.SECRET || "mysupersecret",
   },
   touchAfter: 24 * 3600,
+  autoRemove: 'disabled',  
 });
 
 store.on("error", (err) => {
