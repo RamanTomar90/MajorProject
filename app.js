@@ -1,35 +1,31 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
-
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
-
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
 const dbUrl = process.env.MONGO_URL;
 
-const store = MongoStore.create({
+const store = new MongoStore({
   mongoUrl: dbUrl,
   crypto: {
     secret: process.env.SECRET || "mysupersecret",
   },
   touchAfter: 24 * 3600,
-  autoRemove: 'disabled',  
+  autoRemove: "disabled",
 });
 
 store.on("error", (err) => {
@@ -76,7 +72,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-
 mongoose.connect(dbUrl)
   .then(() => {
     console.log("DB connected");
@@ -93,18 +88,13 @@ app.use("/listings/:id/reviews", reviewRouter);
 app.use("/listings", listingRouter);
 app.use("/", userRouter);
 
-// error handler
-// Error Handler
 app.use((err, req, res, next) => {
   console.error(err);
-
   if (res.headersSent) {
     return next(err);
   }
-
   const statusCode = err.statusCode || 500;
   const message = err.message || "Something went wrong!";
-
   res.status(statusCode).render("error", {
     err: {
       statusCode,
@@ -112,7 +102,6 @@ app.use((err, req, res, next) => {
     },
   });
 });
-
 
 const PORT = process.env.PORT || 8080;
 
