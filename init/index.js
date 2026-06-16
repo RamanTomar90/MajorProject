@@ -1,9 +1,12 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config({ path: require("path").join(__dirname, "../.env") });
+}
+
 const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
-const User = require("../models/user.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust2";
+const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/wanderlust2";
 
 async function main() {
   await mongoose.connect(MONGO_URL);
@@ -13,11 +16,11 @@ async function main() {
 const initDB = async () => {
   await Listing.deleteMany({});
 
-  
-  // data me owner add karo
+  // FIXED: removed reference to undefined `user` variable
+  // Geometry is required by the model, so seed with a default point
   const newData = initData.data.map((obj) => ({
     ...obj,
-    owner: user._id,
+    geometry: obj.geometry || { type: "Point", coordinates: [77.2090, 28.6139] }, // Delhi default
   }));
 
   await Listing.insertMany(newData);

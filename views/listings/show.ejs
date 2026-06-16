@@ -6,7 +6,7 @@
     </div>
 
     <div class="card col-6 offset-3 show-card listing-card">
-        <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing-image">
+        <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800' %>" class="card-img-top show-img" alt="listing-image">
         <div class="card-body">
             <p class="card-text">owned by:<i><%= listing.owner.username %></i></p>
             <p class="card-text"><%= listing.description %></p>
@@ -64,7 +64,7 @@
     </form>
     <% } %>
 
-  <% if(listing.reviews.length > 0) { %>
+  <% if(listing.reviews && listing.reviews.length > 0) { %>
     <div class="row">
         <p><b>All Reviews</b></p>
         <% for(let review of listing.reviews) { %>
@@ -96,7 +96,7 @@
 
 <!-- ✅ VARIABLES FIRST -->
 <script>
-    const mapToken = "<%= process.env.MAP_TOKEN %>";
+    const mapToken = "<%= mapToken %>";
     const listing = <%- JSON.stringify(listing) %>;
     const coordinates = <%- JSON.stringify(listing.geometry.coordinates) %>;
 </script>
