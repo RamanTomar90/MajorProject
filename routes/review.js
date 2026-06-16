@@ -8,7 +8,7 @@ const {
   isReviewAuthor,
 } = require("../middleware");
 
-const reviewController = require("../controllers/review"); // 👈 filename check karo
+const reviewController = require("../controllers/reviews"); 
 
 // CREATE REVIEW
 router.post(
