@@ -37,14 +37,6 @@ store.on("error", (err) => {
 
 app.set("trust proxy", 1);
 
-
-app.use((req, res, next) => {
-  res.locals.currUser = null;
-  res.locals.success = [];
-  res.locals.error = [];
-  next();
-});
-
 const sessionOptions = {
   store,
   secret: process.env.SECRET || "mysupersecret",
