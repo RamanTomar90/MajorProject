@@ -1,16 +1,20 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
-// ❌ .default hatao
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new Schema({
-    email: {
-        type: String,
-        required: true
-    },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true,
+  },
 });
 
-userSchema.plugin(passportLocalMongoose);
+// 👇 IMPORTANT FIX
+userSchema.plugin(passportLocalMongoose, {
+  usernameField: "username"
+});
 
 module.exports = mongoose.model("User", userSchema);
